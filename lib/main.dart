@@ -31,47 +31,69 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  TextStyle cstyle =
+  var errorText = "Make sure you are connected to BSNL Wifi and try again!";
+  var cstyle =
       TextStyle(color: Color.fromARGB(255, 245, 245, 245), fontSize: 20);
-  Future<DataBalance> dataBalance = fetchData();
+  var estyle =
+      TextStyle(color: Color.fromARGB(255, 150, 150, 150), fontSize: 16);
+  var dataBalance = fetchData();
 
+  void _refresh() {
+    setState(() {
+      dataBalance = null;
+      dataBalance = fetchData();
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 45, 45, 45),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("Today's Data Usage ", style: cstyle),
-            SizedBox(height: 10),
-            FutureBuilder<DataBalance>(
-                future: dataBalance,
-                builder: (context, AsyncSnapshot<DataBalance> snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(snapshot.data.today, style: cstyle);
-                  } else {
-                    return Text("", style: cstyle);
-                  }
-                }),
-            SizedBox(height: 30),
-            Text(
-              "Total Data Usage ",
-              style: cstyle,
-            ),
-            SizedBox(height: 10),
-            FutureBuilder<DataBalance>(
-                future: dataBalance,
-                builder: (context, AsyncSnapshot<DataBalance> snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(snapshot.data.total, style: cstyle);
-                  } else {
-                    return Text("", style: cstyle);
-                  }
-                }),
-          ],
+        child: FutureBuilder<DataBalance>(
+          future: dataBalance,
+          builder: (context, AsyncSnapshot<DataBalance> snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data.valid == true) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("Today's Data Usage ", style: cstyle),
+                    SizedBox(height: 10),
+                    Text(
+                      snapshot.data.today,
+                      style: cstyle,
+                    ),
+                    SizedBox(height: 30),
+                    Text(
+                      "Total Data Usage ",
+                      style: cstyle,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      snapshot.data.total,
+                      style: cstyle,
+                    ),
+                  ],
+                );
+              } else {
+                return Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: Text(
+                    errorText,
+                    style: estyle,
+                  ),
+                );
+              }
+            } else {
+              return Text(
+                "Loading... ",
+                style: cstyle,
+              );
+            }
+          },
         ),
       ),
+      floatingActionButton: FloatingActionButton(onPressed: _refresh, child: Icon(Icons.refresh),),
     );
   }
 }

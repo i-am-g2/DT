@@ -2,11 +2,11 @@
 
 # DT 
 ### DataTracker  
-A simple one-page flutter app to tell me how much data does my BSNL FTTH has left.
-
+A simple one-page flutter app to tell me how much data is left with my BSNL FTTH Connection.
+No Login Required.
 
 ### Why 
-So, that data can be used judiciosuly by us. (hopefully) 
+So, that data can be used judiciously by us. (hopefully) 
 
 ### Working
 - Send a GET request to BSNL FUP(Fair Usage Policy) URL and parse the response headers to acquire cookie. 
@@ -22,4 +22,4 @@ So, that data can be used judiciosuly by us. (hopefully)
 <centre>
 <hr>
 
-> Note : These IP addresses are region dependent. Might not work in different areas. 
+> Note: These URLs are region-dependent. You might need to change it, depending upon yours.
